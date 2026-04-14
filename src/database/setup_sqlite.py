@@ -11,6 +11,10 @@ DB_PATH = "data/jobs.db"
 
 
 def setup():
+
+    # ✅ Fix 1: Buat folder 'data/' jika belum ada
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
@@ -28,8 +32,8 @@ def setup():
             scrape_timestamp TEXT
         )
     """)
-
-    with open(JSONL_PATH, "r") as f:
+    # ✅ Fix 2: Tambah encoding='utf-8'
+    with open(JSONL_PATH, "r", encoding='utf-8') as f:
         for line in f:
             job = json.loads(line)
             salary_min, salary_max = parse_salary(job.get("salary"))
