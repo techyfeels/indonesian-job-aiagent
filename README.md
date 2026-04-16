@@ -3,7 +3,9 @@
 Sistem multi-agent berbasis AI untuk menjawab pertanyaan seputar lowongan kerja di Indonesia. Dibangun menggunakan **LangGraph**, **RAG (Retrieval-Augmented Generation)**, dan **SQL querying** — dikoordinasikan oleh orchestrator agent yang secara otomatis merouting setiap pertanyaan ke agent yang tepat.
 
 > Final Project — AI Engineering | Purwadhika 2025
+
 > Kelompok 3
+
 > Tim: Fil Ardhi Kamza & Anintyo Herdadi
 
 ---
@@ -180,4 +182,3 @@ docker run -p 8000:8000 --env-file .env indonesian-job-ai
 | Docker & GCP Cloud Run | Fil |
 | Qdrant indexing | Anin |
 | RAG Agent | Anin |
-| Streamlit UI | Anin |
