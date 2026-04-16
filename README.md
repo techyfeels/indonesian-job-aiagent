@@ -170,15 +170,3 @@ docker run -p 8000:8000 --env-file .env indonesian-job-ai
 ```
 
 ---
-
-## 📋 Pembagian Tugas
-
-| Tugas | Person |
-|---|---|
-| Data preprocessing & setup SQLite | Fil |
-| SQL Agent | Fil |
-| FastAPI | Fil |
-| Orchestrator (LangGraph) | Fil |
-| Docker & GCP Cloud Run | Fil |
-| Qdrant indexing | Anin |
-| RAG Agent | Anin |
