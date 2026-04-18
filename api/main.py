@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from typing import List, Any
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -14,7 +15,13 @@ class ChatRequest(BaseModel):
 
 
 class ChatResponse(BaseModel):
-    response: str
+    answer:              str
+    agent:               str
+    total_input_tokens:  int
+    total_output_tokens: int
+    price_idr:           float
+    tool_messages:       List[Any]
+    suggested_prompts:   List[str]
 
 
 @app.get("/health")
@@ -27,4 +34,4 @@ def chat(req: ChatRequest):
     if not req.message.strip():
         raise HTTPException(status_code=400, detail="Message tidak boleh kosong")
     result = orchestrate(req.message)
-    return ChatResponse(response=result)
+    return ChatResponse(**result)
