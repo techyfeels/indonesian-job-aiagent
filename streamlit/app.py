@@ -32,6 +32,10 @@ st.set_page_config(
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
+if "suggested_prompts" not in st.session_state:
+    st.session_state.suggested_prompts = []
+if "pending_prompt" not in st.session_state:
+    st.session_state.pending_prompt = None
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 
@@ -139,6 +143,10 @@ def render_response(data: dict):
 st.title("🤖 Indonesian Job AI Agent")
 st.caption("Tanyakan apa saja tentang lowongan kerja di Indonesia.")
 
+# Ambil pending prompt dari klik suggested prompts (sebelum chat_input dirender)
+pending_prompt = st.session_state.pending_prompt
+st.session_state.pending_prompt = None
+
 # Tampilkan riwayat chat
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
@@ -147,10 +155,22 @@ for msg in st.session_state.messages:
         else:
             st.write(msg["content"])
 
-# Input
-user_input = st.chat_input(PLACEHOLDER)
+# Tombol suggested prompts dari respons terakhir
+if st.session_state.suggested_prompts:
+    st.markdown("💡 **Pertanyaan Lanjutan:**")
+    cols = st.columns(len(st.session_state.suggested_prompts))
+    for i, prompt in enumerate(st.session_state.suggested_prompts):
+        if cols[i].button(prompt, key=f"sp_{i}", use_container_width=True):
+            st.session_state.pending_prompt = prompt
+            st.rerun()
+
+# Input dari chat box ATAU dari klik tombol suggested prompt
+user_input = st.chat_input(PLACEHOLDER) or pending_prompt
 
 if user_input:
+    # Reset suggested prompts saat ada pertanyaan baru
+    st.session_state.suggested_prompts = []
+
     st.session_state.messages.append({"role": "user", "content": user_input})
     with st.chat_message("user"):
         st.write(user_input)
@@ -165,6 +185,11 @@ if user_input:
                 "role": "assistant",
                 "data": result["data"],
             })
+            # Simpan suggested prompts untuk ditampilkan sebagai tombol
+            prompts = result["data"].get("suggested_prompts", [])
+            if prompts:
+                st.session_state.suggested_prompts = prompts
+                st.rerun()
         else:
             st.error(result["error"])
             st.session_state.messages.append({
